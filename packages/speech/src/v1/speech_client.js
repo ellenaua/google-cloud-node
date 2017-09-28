@@ -108,6 +108,11 @@ function SpeechClient(gaxGrpc, grpcClients, opts) {
       speechStub.then(function(speechStub) {
         return function() {
           var args = Array.prototype.slice.call(arguments, 0);
+
+          if (opts.connectTimeout && opts.onConnectTimeout) {
+            speechStub.waitForReady(Date.now() + opts.connectTimeout, opts.onConnectTimeout);
+          }
+
           return speechStub[methodName].apply(speechStub, args);
         };
       }),
